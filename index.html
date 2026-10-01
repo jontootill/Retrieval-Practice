@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval Practice - Launcher</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    
+<header class="app-header">
+  <div class="header-content">
+    <h1>Retrieval Practice</h1>
+    <div id="year-badge" class="year-badge hidden">
+      Year: <span id="current-year-text">None</span>
+      <button id="change-year-btn" type="button">Change</button>
+    </div>
+  </div>
+</header>
+
+    <div class="container">
+        <h2>Science Retrieval Practice</h2>
+        
+        <!-- Profile Setup -->
+        <div class="card-box">
+            <h3>1. Target Profile</h3>
+            <div class="form-group">
+                <label for="yearSelect">Year Group:</label>
+                <select id="yearSelect">
+                    <option value="">-- Select Year --</option>
+                    <option value="7">Year 7</option>
+                    <option value="8">Year 8</option>
+                    <option value="9">Year 9</option>
+                    <option value="10">Year 10</option>
+                    <option value="11">Year 11</option>
+                </select>
+            </div>
+
+            <div id="gcseFields" class="hidden">
+                <div class="form-group">
+                    <label for="routeSelect">Exam Route:</label>
+                    <select id="routeSelect">
+                        <option value="1">Combined Science</option>
+                        <option value="2">Triple Science</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tierSelect">Tier:</label>
+                    <select id="tierSelect">
+                        <option value="1">Foundation</option>
+                        <option value="2">Higher</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic Launcher -->
+        <div class="card-box">
+            <h3>2. Select Topic</h3>
+            <div class="form-group">
+                <label for="subjectSelect">Subject:</label>
+                <select id="subjectSelect" disabled>
+                    <option value="">-- Select Subject --</option>
+                    <option value="1">Biology</option>
+                    <option value="2">Chemistry</option>
+                    <option value="3">Physics</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="topicSelect">Topic:</label>
+                <select id="topicSelect" disabled>
+                    <option value="">-- Select Topic --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="subtopicSelect">Subtopic:</label>
+                <select id="subtopicSelect" disabled>
+                    <option value="all">All Subtopics</option>
+                </select>
+            </div>
+            <button id="startBtn" disabled>Start 10-Question Quiz ➔</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

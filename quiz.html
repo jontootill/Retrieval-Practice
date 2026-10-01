@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container" id="quizWrapper">
+        <h3 id="progress">Question 1 of 10</h3>
+
+        <div class="card-container" onclick="flipCard()">
+            <div id="flashcard" class="flashcard">
+                <div class="card-face card-front">
+                    <small>QUESTION</small>
+                    <h2 id="qText">Loading...</h2>
+                    <p><small>💡 Click card to reveal answer</small></p>
+                </div>
+                <div class="card-face card-back">
+                    <small>ANSWER</small>
+                    <h3 id="aText">Loading...</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="ratingBox" class="hidden">
+            <p style="text-align:center;">How well did you know this?</p>
+            <div class="rating-buttons">
+                <button class="rate-btn red" onclick="rate('red')">Red 🔴</button>
+                <button class="rate-btn yellow" onclick="rate('yellow')">Yellow 🟡</button>
+                <button class="rate-btn green" onclick="rate('green')">Green 🟢</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/quiz.js"></script>
+</body>
+</html>
