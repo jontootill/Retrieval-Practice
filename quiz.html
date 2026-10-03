@@ -7,6 +7,34 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    
+<header class="app-header">
+  <div class="header-content">
+    <h1>Retrieval Practice</h1>
+    
+    <div class="header-actions">
+      <!-- Weak Spots Pill / Dropdown in Header -->
+      <div id="weak-spots-container" class="weak-spots-dropdown">
+        <button id="weak-spots-btn" class="weak-spots-pill" type="button" onclick="toggleWeakSpotsDropdown()">
+          🎯 Weak Spots <span id="weak-spots-count" class="badge-count">0</span>
+        </button>
+        <div id="weak-spots-menu" class="dropdown-menu hidden">
+          <h4>Subtopics Needing Review</h4>
+          <ul id="weak-spots-list">
+            <li><em>No weak spots recorded yet!</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Year Selection Badge -->
+      <div id="year-badge" class="year-badge hidden">
+        <span id="current-year-text"></span>
+        <button id="change-year-btn" type="button">Change</button>
+      </div>
+    </div>
+  </div>
+</header>
+
     <div class="container" id="quizWrapper">
         <h3 id="progress">Question 1 of 10</h3>
 
@@ -24,12 +52,22 @@
             </div>
         </div>
 
+        <!-- Quiz Navigation Controls (Back & Skip) -->
+        <div class="quiz-controls">
+            <button id="prevBtn" class="control-btn secondary" onclick="goBack()">
+                ← Back
+            </button>
+            <button id="skipBtn" class="control-btn outline" onclick="skipQuestion()">
+                ⏭️ Skip
+            </button>
+        </div>
+
         <div id="ratingBox" class="hidden">
             <p style="text-align:center;">How well did you know this?</p>
             <div class="rating-buttons">
-                <button class="rate-btn red" onclick="rate('red')">Red 🔴</button>
-                <button class="rate-btn yellow" onclick="rate('yellow')">Yellow 🟡</button>
-                <button class="rate-btn green" onclick="rate('green')">Green 🟢</button>
+                <button class="rate-btn red" onclick="rate('red')">Need to relearn 🔴</button>
+                <button class="rate-btn yellow" onclick="rate('yellow')">Need some practice 🟡</button>
+                <button class="rate-btn green" onclick="rate('green')">Correct and Confident 🟢</button>
             </div>
         </div>
     </div>

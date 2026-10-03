@@ -7,23 +7,40 @@
     <title>Retrieval Practice - Launcher</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    
-<header class="app-header">
-  <div class="header-content">
-    <h1>Retrieval Practice</h1>
-    <div id="year-badge" class="year-badge hidden">
-      Year: <span id="current-year-text">None</span>
-      <button id="change-year-btn" type="button">Change</button>
-    </div>
-  </div>
-</header>
+
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Retrieval Practice</h1>
+            
+            <div class="header-actions">
+                <!-- Weak Spots Pill & Dropdown -->
+                <div id="weak-spots-container" class="weak-spots-dropdown">
+                    <button id="weak-spots-btn" class="weak-spots-pill" type="button" onclick="toggleWeakSpotsDropdown()">
+                        🎯 Weak Spots <span id="weak-spots-count" class="badge-count">0</span>
+                    </button>
+                    <div id="weak-spots-menu" class="dropdown-menu hidden">
+                        <h4 style="margin: 0 0 8px 0; font-size: 0.95rem; color: #1e293b; text-align: left;">Top 3 Weak Spots</h4>
+                        <ul id="weak-spots-list" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="padding: 8px 0; color: #64748b;"><em>No weak spots recorded yet!</em></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Live Profile Badge in Header -->
+                <div id="year-badge" class="year-badge">
+                    <span id="current-year-text">Select Profile</span>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <div class="container">
         <h2>Science Retrieval Practice</h2>
         
-        <!-- Profile Setup -->
-        <div class="card-box">
+        <!-- Target Profile Card (Always Visible) -->
+        <div id="target-profile-box" class="card-box">
             <h3>1. Target Profile</h3>
             <div class="form-group">
                 <label for="yearSelect">Year Group:</label>
@@ -37,6 +54,7 @@
                 </select>
             </div>
 
+            <!-- GCSE Route & Tier Fields (Visible for Y10 & Y11) -->
             <div id="gcseFields" class="hidden">
                 <div class="form-group">
                     <label for="routeSelect">Exam Route:</label>
@@ -55,7 +73,7 @@
             </div>
         </div>
 
-        <!-- Topic Launcher -->
+        <!-- Topic Selection Card -->
         <div class="card-box">
             <h3>2. Select Topic</h3>
             <div class="form-group">
@@ -84,5 +102,79 @@
     </div>
 
     <script src="js/app.js"></script>
+
+    <!-- Weak Spots Header Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            let userProgress = JSON.parse(localStorage.getItem('quiz_user_progress')) || {};
+            let subtopicMap = {};
+
+            try {
+                const currRes = await fetch("data/curriculum.json");
+                const curriculum = await currRes.json();
+                
+                function buildMap(node) {
+                    if (!node) return;
+                    if (Array.isArray(node)) { node.forEach(buildMap); return; }
+                    if (node.id !== undefined && (node.title || node.name) && !node.topics && !node.subtopics) {
+                        subtopicMap[Number(node.id)] = node.title || node.name;
+                    }
+                    for (const key in node) {
+                        if (typeof node[key] === 'object' && node[key] !== null) buildMap(node[key]);
+                    }
+                }
+                buildMap(curriculum);
+
+                // Top 3 Weak Spots Capped
+                const weakSpots = Object.entries(userProgress)
+                    .map(([subtopicId, stats]) => ({
+                        subtopicId,
+                        weaknessScore: (stats.incorrect + (0.5 * stats.skipped)) / stats.total,
+                        stats
+                    }))
+                    .filter(item => item.stats.total >= 1 && item.weaknessScore > 0.2)
+                    .sort((a, b) => b.weaknessScore - a.weaknessScore)
+                    .slice(0, 3);
+
+                const countBadge = document.getElementById('weak-spots-count');
+                if (countBadge) countBadge.innerText = weakSpots.length;
+
+                const listElement = document.getElementById('weak-spots-list');
+                if (listElement) {
+                    if (weakSpots.length === 0) {
+                        listElement.innerHTML = '<li style="padding: 8px 0; color: #64748b;"><em>No weak spots recorded yet!</em></li>';
+                    } else {
+                        listElement.innerHTML = weakSpots.map(item => {
+                            const title = subtopicMap[Number(item.subtopicId)] || `Subtopic ${item.subtopicId}`;
+                            const accuracy = Math.round((item.stats.correct / item.stats.total) * 100) || 0;
+                            return `
+                                <li style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: left;">
+                                    <strong style="color: #1e293b; font-size: 0.9rem;">${title}</strong><br>
+                                    <small style="color: #64748b; font-size: 0.8rem;">
+                                        ${accuracy}% accuracy (${item.stats.incorrect} wrong, ${item.stats.skipped} skipped)
+                                    </small>
+                                </li>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading curriculum", e);
+            }
+        });
+
+        function toggleWeakSpotsDropdown() {
+            const menu = document.getElementById('weak-spots-menu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (event) => {
+            const container = document.getElementById('weak-spots-container');
+            const menu = document.getElementById('weak-spots-menu');
+            if (container && menu && !container.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>

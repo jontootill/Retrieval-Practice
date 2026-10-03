@@ -92,3 +92,120 @@ button:disabled { background: #cbd5e1; cursor: not-allowed; }
 .rate-btn.red { background: #fee2e2; color: #991b1b; }
 .rate-btn.yellow { background: #fef3c7; color: #92400e; }
 .rate-btn.green { background: #dcfce7; color: #166534; }
+
+/* Header Actions Alignment */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Weak Spots Pill & Dropdown */
+.weak-spots-dropdown {
+  position: relative;
+}
+
+.weak-spots-pill {
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.weak-spots-pill:hover {
+  background-color: #fee2e2;
+}
+
+.badge-count {
+  background-color: #dc2626;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 0.75rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 260px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 12px;
+  z-index: 100;
+}
+
+.dropdown-menu h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.dropdown-menu li {
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Quiz Controls (Back / Skip) */
+.quiz-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.control-btn.secondary {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.control-btn.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-btn.outline {
+  background-color: transparent;
+  border: 1px solid #9ca3af;
+  color: #4b5563;
+}
+
+.control-btn.outline:hover {
+  background-color: #f9fafb;
+}
