@@ -1,9 +1,71 @@
 {
   "subjects": [
-    { "id": 1, "name": "Biology" },
-    { "id": 2, "name": "Chemistry" },
-    { "id": 3, "name": "Physics" },
-    { "id": 4, "name": "Working Scientifically" }
+    {
+      "id": 1,
+      "name": "Biology",
+      "hasRoutes": true,
+      "hasTiers": true,
+      "routeTierYearIds": [10, 11],
+      "allowedRouteIds": [1, 2],
+      "defaultRouteId": null,
+      "allowedTierIds": [1, 2],
+      "defaultTierId": 0
+    },
+    {
+      "id": 2,
+      "name": "Chemistry",
+      "hasRoutes": true,
+      "hasTiers": true,
+      "routeTierYearIds": [10, 11],
+      "allowedRouteIds": [1, 2],
+      "defaultRouteId": null,
+      "allowedTierIds": [1, 2],
+      "defaultTierId": 0
+    },
+    {
+      "id": 3,
+      "name": "Physics",
+      "hasRoutes": true,
+      "hasTiers": true,
+      "routeTierYearIds": [10, 11],
+      "allowedRouteIds": [1, 2],
+      "defaultRouteId": null,
+      "allowedTierIds": [1, 2],
+      "defaultTierId": 0
+    },
+    {
+      "id": 4,
+      "name": "Working Scientifically",
+      "hasRoutes": false,
+      "hasTiers": false,
+      "routeTierYearIds": [],
+      "allowedRouteIds": [],
+      "defaultRouteId": null,
+      "allowedTierIds": [],
+      "defaultTierId": 0
+    },
+    {
+      "id": 5,
+      "name": "Geography",
+      "hasRoutes": false,
+      "hasTiers": false,
+      "routeTierYearIds": [],
+      "allowedRouteIds": [],
+      "defaultRouteId": null,
+      "allowedTierIds": [],
+      "defaultTierId": 0
+    },
+    {
+      "id": 6,
+      "name": "PE",
+      "hasRoutes": false,
+      "hasTiers": false,
+      "routeTierYearIds": [],
+      "allowedRouteIds": [],
+      "defaultRouteId": null,
+      "allowedTierIds": [],
+      "defaultTierId": 0
+    }
   ],
   "years": [
     { "id": 7, "name": "Year 7" },
@@ -13,9 +75,9 @@
     { "id": 11, "name": "Year 11" }
   ],
   "routes": [
-    { "id": 0, "name": "KS3 Science" },
-    { "id": 1, "name": "Combined Science" },
-    { "id": 2, "name": "Triple Science" }
+    { "id": 0, "name": "KS3" },
+    { "id": 1, "name": "Combined" },
+    { "id": 2, "name": "Separate" }
   ],
   "tiers": [
     { "id": 0, "name": "All Tiers" },
@@ -75,7 +137,44 @@
     { "id": 47, "subjectId": 4, "year": 7, "name": "Apparatus" },
     { "id": 48, "subjectId": 4, "year": 7, "name": "Variables" },
     { "id": 51, "subjectId": 4, "year": 8, "name": "Hazards" },
-    { "id": 52, "subjectId": 4, "year": 8, "name": "Method writing" }
+    { "id": 52, "subjectId": 4, "year": 8, "name": "Method writing" },
+
+
+
+
+    { "id": 60, "subjectId": 5, "year": 7, "name": "Map Skills" },
+    { "id": 61, "subjectId": 5, "year": 7, "name": "River Landscapes" },
+    { "id": 62, "subjectId": 5, "year": 7, "name": "Weather and Climate" },
+    { "id": 63, "subjectId": 5, "year": 7, "name": "Glacial Landscapes" },
+
+    { "id": 64, "subjectId": 5, "year": 8, "name": "Restless Earth" },
+    { "id": 65, "subjectId": 5, "year": 8, "name": "World Ecosystems" },
+    { "id": 66, "subjectId": 5, "year": 8, "name": "The Coast" },
+
+    { "id": 67, "subjectId": 5, "year": 9, "name": "Population" },
+    { "id": 68, "subjectId": 5, "year": 9, "name": "Development" },
+    { "id": 69, "subjectId": 5, "year": 9, "name": "Urbanisation" },
+
+    { "id": 70, "subjectId": 5, "year": 10, "name": "Challenge of Natural Hazards" },
+    { "id": 71, "subjectId": 5, "year": 10, "name": "The Living World" },
+    { "id": 72, "subjectId": 5, "year": 10, "name": "Physical Landscapes in the UK" },
+    { "id": 73, "subjectId": 5, "year": 10, "name": "Geographical Fieldwork" },
+
+    { "id": 74, "subjectId": 5, "year": 11, "name": "Urban Issues and Challenges" },
+    { "id": 75, "subjectId": 5, "year": 11, "name": "The Changing Economic World" },
+    { "id": 76, "subjectId": 5, "year": 11, "name": "Challenge of Resource Management" },
+
+
+
+
+
+
+  { "id": 77, "subjectId": 6, "year": 10, "name": "Anatomy and Physiology" },
+  { "id": 78, "subjectId": 6, "year": 10, "name": "Physical Training" },
+
+  { "id": 79, "subjectId": 6, "year": 11, "name": "Socio-Cultural Influences" },
+  { "id": 80, "subjectId": 6, "year": 11, "name": "Sports Psychology" },
+  { "id": 81, "subjectId": 6, "year": 11, "name": "Health, Fitness and Well-Being" }
   ],
   "subtopics": [
     { "id": 101, "topicId": 1, "year": 7, "name": "Cell Structure & Microscopy" },
@@ -195,6 +294,182 @@
     { "id": 522, "topicId": 45, "year": 11, "name": "Reflection and Refraction", "linkedSubtopics": [113, 114] },
     { "id": 523, "topicId": 45, "year": 11, "name": "Electromagnetic Waves", "linkedSubtopics": [114] },
     { "id": 524, "topicId": 46, "year": 11, "name": "Magnetism", "linkedSubtopics": [214] },
-    { "id": 525, "topicId": 46, "year": 11, "name": "Motor effect", "linkedSubtopics": [214] }
+    { "id": 525, "topicId": 46, "year": 11, "name": "Motor effect", "linkedSubtopics": [214] },
+
+
+
+
+
+
+  { "id": 601, "topicId": 60, "year": 7, "name": "Types of Geography" },
+  { "id": 602, "topicId": 60, "year": 7, "name": "Compass Directions" },
+  { "id": 603, "topicId": 60, "year": 7, "name": "Grid References" },
+
+  { "id": 604, "topicId": 61, "year": 7, "name": "The Water Cycle" },
+  { "id": 605, "topicId": 61, "year": 7, "name": "River Channel: Source to Mouth" },
+  { "id": 606, "topicId": 61, "year": 7, "name": "River Erosion, Transportation & Deposition" },
+  { "id": 607, "topicId": 61, "year": 7, "name": "River Erosional Landforms" },
+  { "id": 608, "topicId": 61, "year": 7, "name": "River Depositional Landforms" },
+  { "id": 609, "topicId": 61, "year": 7, "name": "How & Why Rivers Flood" },
+  { "id": 610, "topicId": 61, "year": 7, "name": "Flood Management: Hard & Soft Engineering" },
+
+  { "id": 611, "topicId": 62, "year": 7, "name": "Weather vs Climate" },
+  { "id": 612, "topicId": 62, "year": 7, "name": "UK Climate Differences" },
+  { "id": 613, "topicId": 62, "year": 7, "name": "Atmospheric Circulation" },
+  { "id": 614, "topicId": 62, "year": 7, "name": "Weather & Atmospheric Circulation" },
+  { "id": 615, "topicId": 62, "year": 7, "name": "Formation of Tropical Storms" },
+  { "id": 616, "topicId": 62, "year": 7, "name": "Hurricane Effects & Responses" },
+  { "id": 617, "topicId": 62, "year": 7, "name": "Reducing the Impacts of Hurricanes" },
+
+  { "id": 618, "topicId": 63, "year": 7, "name": "Ice & the UK Landscape" },
+  { "id": 619, "topicId": 63, "year": 7, "name": "Glacial Processes" },
+  { "id": 620, "topicId": 63, "year": 7, "name": "Glacial Movement & Deposition" },
+  { "id": 621, "topicId": 63, "year": 7, "name": "Glacial Landforms" },
+  { "id": 622, "topicId": 63, "year": 7, "name": "Economic Activities in Glaciated Uplands" },
+
+  { "id": 623, "topicId": 64, "year": 8, "name": "Tectonic Processes" },
+  { "id": 624, "topicId": 64, "year": 8, "name": "Tectonic Hazards: Effects & Responses" },
+  { "id": 625, "topicId": 64, "year": 8, "name": "Managing Tectonic Hazards" },
+
+  { "id": 626, "topicId": 65, "year": 8, "name": "Ecosystems & How They Function" },
+  { "id": 627, "topicId": 65, "year": 8, "name": "Global Ecosystem Distribution & Characteristics" },
+  { "id": 628, "topicId": 65, "year": 8, "name": "Tropical Rainforest Features" },
+  { "id": 629, "topicId": 65, "year": 8, "name": "Causes & Impacts of Deforestation" },
+  { "id": 630, "topicId": 65, "year": 8, "name": "Sustainable Rainforest Management" },
+
+  { "id": 631, "topicId": 66, "year": 8, "name": "Coastal Erosion, Transportation & Deposition", "linkedSubtopics": [606] },
+  { "id": 632, "topicId": 66, "year": 8, "name": "Coastal Erosional Landforms", "linkedSubtopics": [607] },
+  { "id": 633, "topicId": 66, "year": 8, "name": "Coastal Depositional Landforms", "linkedSubtopics": [608] },
+  { "id": 634, "topicId": 66, "year": 8, "name": "Coastal Protection: Hard & Soft Engineering", "linkedSubtopics": [610] },
+  { "id": 635, "topicId": 66, "year": 8, "name": "Evaluating Coastal Management Strategies", "linkedSubtopics": [610] },
+
+  { "id": 636, "topicId": 67, "year": 9, "name": "Demographic Transition Model" },
+  { "id": 637, "topicId": 67, "year": 9, "name": "Population Structure" },
+  { "id": 638, "topicId": 67, "year": 9, "name": "Managing Rapid Population Growth" },
+  { "id": 639, "topicId": 67, "year": 9, "name": "Managing an Ageing Population" },
+  { "id": 640, "topicId": 67, "year": 9, "name": "Impacts of Migration" },
+
+  { "id": 641, "topicId": 68, "year": 9, "name": "Measuring & Categorising Development" },
+  { "id": 642, "topicId": 68, "year": 9, "name": "Human Development Index (HDI)" },
+  { "id": 643, "topicId": 68, "year": 9, "name": "Causes of the Development Gap" },
+  { "id": 644, "topicId": 68, "year": 9, "name": "Closing the Development Gap" },
+  { "id": 645, "topicId": 68, "year": 9, "name": "Causes of Economic Change in the UK" },
+  { "id": 646, "topicId": 68, "year": 9, "name": "Consequences of Economic Change in the UK" },
+
+  { "id": 647, "topicId": 69, "year": 9, "name": "Processes of Urbanisation" },
+  { "id": 648, "topicId": 69, "year": 9, "name": "Urban Growth in LICs & NEEs" },
+  { "id": 649, "topicId": 69, "year": 9, "name": "Land Use Model" },
+  { "id": 650, "topicId": 69, "year": 9, "name": "Urban Change in UK Cities" },
+  { "id": 651, "topicId": 70, "year": 10, "name": "Tectonic Processes", "linkedSubtopics": [623] },
+  { "id": 652, "topicId": 70, "year": 10, "name": "Tectonic Hazards: Effects & Responses", "linkedSubtopics": [624] },
+  { "id": 653, "topicId": 70, "year": 10, "name": "Managing Tectonic Hazards", "linkedSubtopics": [625] },
+  { "id": 654, "topicId": 70, "year": 10, "name": "Global Atmospheric Circulation", "linkedSubtopics": [613, 614] },
+  { "id": 655, "topicId": 70, "year": 10, "name": "Formation of Tropical Storms", "linkedSubtopics": [615] },
+  { "id": 656, "topicId": 70, "year": 10, "name": "Managing Tropical Storms", "linkedSubtopics": [616, 617] },
+  { "id": 657, "topicId": 70, "year": 10, "name": "UK Weather Hazards", "linkedSubtopics": [611, 612] },
+  { "id": 658, "topicId": 70, "year": 10, "name": "Increase in Extreme Weather in the UK", "linkedSubtopics": [612] },
+  { "id": 659, "topicId": 70, "year": 10, "name": "Evidence for Climate Change" },
+  { "id": 660, "topicId": 70, "year": 10, "name": "Causes of Climate Change" },
+  { "id": 661, "topicId": 70, "year": 10, "name": "Effects of Climate Change" },
+  { "id": 662, "topicId": 70, "year": 10, "name": "Reducing the Causes of Climate Change" },
+  { "id": 663, "topicId": 70, "year": 10, "name": "Adapting to Climate Change" },
+
+  { "id": 664, "topicId": 71, "year": 10, "name": "Ecosystems & How They Function", "linkedSubtopics": [626] },
+  { "id": 665, "topicId": 71, "year": 10, "name": "Global Ecosystem Distribution & Characteristics", "linkedSubtopics": [627] },
+  { "id": 666, "topicId": 71, "year": 10, "name": "Tropical Rainforest Features", "linkedSubtopics": [628] },
+  { "id": 667, "topicId": 71, "year": 10, "name": "Rainforest Adaptations", "linkedSubtopics": [628] },
+  { "id": 668, "topicId": 71, "year": 10, "name": "Rainforest Interdependence", "linkedSubtopics": [626, 628] },
+  { "id": 669, "topicId": 71, "year": 10, "name": "Causes & Impacts of Deforestation", "linkedSubtopics": [629] },
+  { "id": 670, "topicId": 71, "year": 10, "name": "Deforestation in the Amazon", "linkedSubtopics": [629] },
+  { "id": 671, "topicId": 71, "year": 10, "name": "Sustainable Rainforest Management", "linkedSubtopics": [630] },
+  { "id": 672, "topicId": 71, "year": 10, "name": "Cold Environment Features", "linkedSubtopics": [627] },
+  { "id": 673, "topicId": 71, "year": 10, "name": "Cold Environment Adaptations" },
+  { "id": 674, "topicId": 71, "year": 10, "name": "Fragility & Interdependence of Cold Environments", "linkedSubtopics": [626] },
+  { "id": 675, "topicId": 71, "year": 10, "name": "Cold Environment Case Study: Development Challenges" },
+  { "id": 676, "topicId": 71, "year": 10, "name": "Protecting Cold Environments" },
+  { "id": 677, "topicId": 71, "year": 10, "name": "Balancing Development & Conservation in Cold Environments" },
+
+  { "id": 678, "topicId": 72, "year": 10, "name": "Coastal Erosion, Transportation & Deposition", "linkedSubtopics": [631, 606] },
+  { "id": 679, "topicId": 72, "year": 10, "name": "Coastal Erosional Landforms", "linkedSubtopics": [632, 607] },
+  { "id": 680, "topicId": 72, "year": 10, "name": "Coastal Depositional Landforms", "linkedSubtopics": [633, 608] },
+  { "id": 681, "topicId": 72, "year": 10, "name": "Coastal Protection: Hard & Soft Engineering", "linkedSubtopics": [634, 610] },
+  { "id": 682, "topicId": 72, "year": 10, "name": "Evaluating Coastal Management: Holderness Case Study", "linkedSubtopics": [635] },
+  { "id": 683, "topicId": 72, "year": 10, "name": "The Water Cycle", "linkedSubtopics": [604] },
+  { "id": 684, "topicId": 72, "year": 10, "name": "River Long Profile & Cross Profile", "linkedSubtopics": [605] },
+  { "id": 685, "topicId": 72, "year": 10, "name": "River Erosion, Transportation & Deposition", "linkedSubtopics": [606] },
+  { "id": 686, "topicId": 72, "year": 10, "name": "River Landforms", "linkedSubtopics": [607, 608] },
+  { "id": 687, "topicId": 72, "year": 10, "name": "How & Why Rivers Flood", "linkedSubtopics": [609] },
+  { "id": 688, "topicId": 72, "year": 10, "name": "Flood Hydrographs", "linkedSubtopics": [609] },
+  { "id": 689, "topicId": 72, "year": 10, "name": "River Flood Management: Hard & Soft Engineering", "linkedSubtopics": [610] },
+
+  { "id": 690, "topicId": 73, "year": 10, "name": "Physical & Human Geographical Enquiries" },
+  { "id": 691, "topicId": 73, "year": 10, "name": "Fieldwork Questions & Hypotheses" },
+  { "id": 692, "topicId": 73, "year": 10, "name": "Fieldwork Risks & Location Choice" },
+  { "id": 693, "topicId": 73, "year": 10, "name": "Fieldwork Data Collection" },
+  { "id": 694, "topicId": 73, "year": 10, "name": "Fieldwork Data Presentation" },
+  { "id": 695, "topicId": 73, "year": 10, "name": "Describing, Analysing & Explaining Fieldwork Data" },
+  { "id": 696, "topicId": 73, "year": 10, "name": "Using Data as Evidence for a Hypothesis" },
+  { "id": 697, "topicId": 73, "year": 10, "name": "Evaluating Fieldwork" },
+
+  { "id": 698, "topicId": 74, "year": 11, "name": "Processes of Urbanisation", "linkedSubtopics": [647] },
+  { "id": 699, "topicId": 74, "year": 11, "name": "Urban Growth in LICs & NEEs", "linkedSubtopics": [648] },
+  { "id": 700, "topicId": 74, "year": 11, "name": "Urban Change in UK Cities", "linkedSubtopics": [650] },
+  { "id": 701, "topicId": 74, "year": 11, "name": "Urban Sustainability: Resources & Transport" },
+
+  { "id": 702, "topicId": 75, "year": 11, "name": "Measuring & Categorising Development", "linkedSubtopics": [641] },
+  { "id": 703, "topicId": 75, "year": 11, "name": "Human Development Index (HDI)", "linkedSubtopics": [642] },
+  { "id": 704, "topicId": 75, "year": 11, "name": "Causes of the Development Gap", "linkedSubtopics": [643] },
+  { "id": 705, "topicId": 75, "year": 11, "name": "Closing the Development Gap", "linkedSubtopics": [644] },
+  { "id": 706, "topicId": 75, "year": 11, "name": "Causes of Economic Change in the UK", "linkedSubtopics": [645] },
+  { "id": 707, "topicId": 75, "year": 11, "name": "Consequences of Economic Change in the UK", "linkedSubtopics": [646] },
+
+  { "id": 708, "topicId": 76, "year": 11, "name": "Global Inequality in Resource Supply & Consumption" },
+  { "id": 709, "topicId": 76, "year": 11, "name": "UK Demand for Food, Water & Energy" },
+  { "id": 710, "topicId": 76, "year": 11, "name": "Global Water Demand: Insecurity & Conflict" },
+  { "id": 711, "topicId": 76, "year": 11, "name": "Increasing Water Supply" },
+
+
+
+
+
+
+
+  { "id": 712, "topicId": 77, "year": 10, "name": "Location of Major Bones", "linkedSubtopics": [115] },
+  { "id": 713, "topicId": 77, "year": 10, "name": "Functions of the Skeleton", "linkedSubtopics": [115] },
+  { "id": 714, "topicId": 77, "year": 10, "name": "Types of Synovial Joints", "linkedSubtopics": [115] },
+  { "id": 715, "topicId": 77, "year": 10, "name": "Types of Movement at Synovial Joints" },
+  { "id": 716, "topicId": 77, "year": 10, "name": "Other Components of Joints", "linkedSubtopics": [115] },
+  { "id": 717, "topicId": 77, "year": 10, "name": "Location of Major Muscle Groups", "linkedSubtopics": [115] },
+  { "id": 718, "topicId": 77, "year": 10, "name": "Roles of Muscles in Movement", "linkedSubtopics": [115] },
+  { "id": 719, "topicId": 77, "year": 10, "name": "Lever Systems", "linkedSubtopics": [106] },
+  { "id": 720, "topicId": 77, "year": 10, "name": "Planes of Movement & Axes of Rotation" },
+  { "id": 721, "topicId": 77, "year": 10, "name": "Structure & Functions of the Cardiovascular System", "linkedSubtopics": [107] },
+  { "id": 722, "topicId": 77, "year": 10, "name": "Structure & Functions of the Respiratory System", "linkedSubtopics": [108, 109] },
+  { "id": 723, "topicId": 77, "year": 10, "name": "Aerobic & Anaerobic Exercise", "linkedSubtopics": [109, 414, 415] },
+  { "id": 724, "topicId": 77, "year": 10, "name": "Short-Term Effects of Exercise", "linkedSubtopics": [414, 415] },
+  { "id": 725, "topicId": 77, "year": 10, "name": "Long-Term Effects of Exercise", "linkedSubtopics": [414, 415] },
+
+  { "id": 726, "topicId": 78, "year": 10, "name": "Components of Fitness" },
+  { "id": 727, "topicId": 78, "year": 10, "name": "Principles of Training" },
+  { "id": 728, "topicId": 78, "year": 10, "name": "Optimising Training" },
+  { "id": 729, "topicId": 78, "year": 10, "name": "Preventing Injury" },
+
+  { "id": 730, "topicId": 79, "year": 11, "name": "Physical Activity & Sport in the UK" },
+  { "id": 731, "topicId": 79, "year": 11, "name": "Participation in Physical Activity & Sport" },
+  { "id": 732, "topicId": 79, "year": 11, "name": "Commercialisation of Sport" },
+  { "id": 733, "topicId": 79, "year": 11, "name": "Ethics in Sport" },
+  { "id": 734, "topicId": 79, "year": 11, "name": "Drugs in Sport" },
+  { "id": 735, "topicId": 79, "year": 11, "name": "Violence in Sport" },
+
+  { "id": 736, "topicId": 80, "year": 11, "name": "Characteristics of Skilful Movement" },
+  { "id": 737, "topicId": 80, "year": 11, "name": "Classification of Skills" },
+  { "id": 738, "topicId": 80, "year": 11, "name": "Goal Setting" },
+  { "id": 739, "topicId": 80, "year": 11, "name": "Mental Preparation" },
+  { "id": 740, "topicId": 80, "year": 11, "name": "Types of Guidance" },
+  { "id": 741, "topicId": 80, "year": 11, "name": "Types of Feedback" },
+
+  { "id": 742, "topicId": 81, "year": 11, "name": "Benefits of a Healthy Lifestyle" },
+  { "id": 743, "topicId": 81, "year": 11, "name": "Consequences of a Sedentary Lifestyle" },
+  { "id": 744, "topicId": 81, "year": 11, "name": "Diet & Nutrition", "linkedSubtopics": [205] }
   ]
 }

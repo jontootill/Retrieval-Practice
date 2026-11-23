@@ -1,4 +1,11 @@
-const SUBJECT_MAP = { 1: "biology.json", 2: "chemistry.json", 3: "physics.json" };
+const SUBJECT_MAP = {
+    1: "biology.json",
+    2: "chemistry.json",
+    3: "physics.json",
+    4: "working_scientifically.json", // Update filename if yours differs
+    5: "geography.json",
+    6: "PE.json"
+};
 
 let questions = [];
 let currentIndex = 0;
@@ -15,18 +22,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     const yearId = parseInt(params.get("year"), 10);
     const topicId = parseInt(params.get("topic"), 10);
     const subtopic = params.get("subtopic");
+    const routeParam = parseInt(params.get("route"), 10);
+    const normalizedRoute = Number.isNaN(routeParam) ? 0 : routeParam;
+    const tierParam = parseInt(params.get("tier"), 10) || 0;
 
     const fileName = SUBJECT_MAP[subjectId];
-    
+    if (!fileName) {
+        document.getElementById("quizWrapper").innerHTML = "<h2>Unknown subject selected.</h2>";
+        return;
+    }
+
     try {
         // 1. Fetch Curriculum & build complete lookup map for subtopics
         const currRes = await fetch("data/curriculum.json");
         const curriculum = await currRes.json();
         buildSubtopicMap(curriculum);
 
+        // Look up subject config from curriculum.json (with safe fallback)
+        const subjectConfig = Array.isArray(curriculum.subjects)
+            ? curriculum.subjects.find(s => Number(s.id) === subjectId)
+            : null;
+
+        const appliesToYear = subjectConfig && Array.isArray(subjectConfig.routeTierYearIds)
+            ? subjectConfig.routeTierYearIds.map(Number).includes(yearId)
+            : [10, 11].includes(yearId);
+
+        const subjectHasRoutes = Boolean(subjectConfig?.hasRoutes);
+        const subjectHasTiers = Boolean(subjectConfig?.hasTiers);
+
+        const filterByRoute = subjectHasRoutes && appliesToYear;
+        const filterByTier = subjectHasTiers && appliesToYear && tierParam > 0;
+
         // 2. Fetch Question Bank
         const res = await fetch(`data/${fileName}`);
         const data = await res.json();
+
+        console.log("Total PE items:", data.length, "Sample:", data[0]);
+    console.log("Year 10 count:", data.filter(q => Number(q.year) === 10).length);
+    console.log("Topic 77 count:", data.filter(q => Number(q.topic) === 77).length);
 
         // 3. Build target subtopic list
         let targetSubtopicIds = [];
@@ -45,13 +78,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         // 4. Filter Questions
         let filtered = data.filter(q => {
             if (targetSubtopicIds.length > 0) {
-                return targetSubtopicIds.includes(Number(q.subtopic));
+                if (!targetSubtopicIds.includes(Number(q.subtopic))) return false;
+            } else {
+                if (topicId && Number(q.topic) !== Number(topicId)) return false;
+                if (yearId && Number(q.year) !== Number(yearId)) return false;
             }
 
-            let match = true;
-            if (topicId) match = match && Number(q.topic) === Number(topicId);
-            if (yearId)  match = match && Number(q.year) === Number(yearId);
-            return match;
+            // Route filtering:
+            // - Only applied to subjects with exam routes in applicable years (e.g., Y10/Y11 sciences)
+            // - Route 0 questions apply to both routes (and KS3)
+            // - Route 1 matches route 1 or 0
+            // - Route 2 matches route 2 or 0
+            if (filterByRoute) {
+                const qRoute = Number(q.route);
+                if (normalizedRoute === 2) {
+                    if (qRoute !== 2 && qRoute !== 0) return false;
+                } else if (normalizedRoute === 1) {
+                    if (qRoute !== 1 && qRoute !== 0) return false;
+                } else {
+                    if (qRoute !== 0 && !Number.isNaN(qRoute)) return false;
+                }
+            }
+
+            // Tier filtering: only when active
+            if (filterByTier) {
+                const qTier = Number(q.tier);
+                // Match selected tier (1 or 2); allow 0 or missing tier so general/shared questions aren't dropped
+                if (qTier !== 0 && !Number.isNaN(qTier) && qTier !== tierParam) {
+                    return false;
+                }
+            }
+
+            return true;
         });
 
         // 5. Handle empty results

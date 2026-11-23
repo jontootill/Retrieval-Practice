@@ -1,5 +1,32 @@
 let CURRICULUM = null;
 
+// Helper: find subject config object from CURRICULUM.subjects
+function getSubjectConfig(subjectId) {
+    if (!CURRICULUM || !Array.isArray(CURRICULUM.subjects)) return null;
+    const idNum = Number(subjectId);
+    if (!idNum) return null;
+    return CURRICULUM.subjects.find(s => Number(s.id) === idNum) || null;
+}
+
+// Helper: determine whether Route & Tier dropdowns should be shown
+function shouldShowRouteAndTier(subjectId, yearValue) {
+    const yearNum = Number(yearValue);
+    if (!subjectId || !yearNum) return false;
+
+    const subject = getSubjectConfig(subjectId);
+    if (!subject) {
+        // Fallback if curriculum hasn't loaded yet: Biology(1), Chemistry(2), Physics(3) in Y10-Y11
+        return [1, 2, 3].includes(Number(subjectId)) && [10, 11].includes(yearNum);
+    }
+
+    const hasFlag = Boolean(subject.hasRoutes || subject.hasTiers);
+    const allowedYears = Array.isArray(subject.routeTierYearIds)
+        ? subject.routeTierYearIds.map(Number)
+        : [10, 11];
+
+    return hasFlag && allowedYears.includes(yearNum);
+}
+
 // Function to update header banner across any page
 function syncHeaderYear() {
     const yearBadge = document.getElementById("year-badge");
@@ -14,68 +41,20 @@ function syncHeaderYear() {
     }
 }
 
-function updateHeaderBadge() {
-    const yearSelect = document.getElementById('yearSelect');
-    const routeSelect = document.getElementById('routeSelect');
-    const tierSelect = document.getElementById('tierSelect');
-    const yearText = document.getElementById('current-year-text');
-    const subjectSelect = document.getElementById('subjectSelect');
-
-    const yearVal = yearSelect ? yearSelect.value : '';
-
-    if (yearVal) {
-        let badgeLabel = `Year ${yearVal}`;
-        
-        // Add Route & Tier for Key Stage 4 (Years 10 & 11)
-        if (parseInt(yearVal) >= 10) {
-            const routeName = routeSelect && routeSelect.value === '2' ? 'Triple' : 'Combined';
-            const tierName = tierSelect && tierSelect.value === '2' ? 'Higher' : 'Foundation';
-            badgeLabel = `Year ${yearVal} - ${routeName} (${tierName})`;
-        }
-
-        if (yearText) yearText.textContent = badgeLabel;
-        if (subjectSelect) subjectSelect.disabled = false;
-    } else {
-        if (yearText) yearText.textContent = 'Select Profile';
-        if (subjectSelect) subjectSelect.disabled = true;
-    }
-}
-
-// Event Listeners for Profile Selectors
-document.addEventListener('DOMContentLoaded', () => {
-    const yearSelect = document.getElementById('yearSelect');
-    const routeSelect = document.getElementById('routeSelect');
-    const tierSelect = document.getElementById('tierSelect');
-    const gcseFields = document.getElementById('gcseFields');
-
-    if (yearSelect) {
-        yearSelect.addEventListener('change', () => {
-            const yearVal = parseInt(yearSelect.value);
-            
-            // Show/hide Route & Tier dropdowns depending on Year Group
-            if (gcseFields) {
-                if (yearVal >= 10) {
-                    gcseFields.classList.remove('hidden');
-                } else {
-                    gcseFields.classList.add('hidden');
-                }
-            }
-            updateHeaderBadge();
-        });
-    }
-
-    if (routeSelect) routeSelect.addEventListener('change', updateHeaderBadge);
-    if (tierSelect) tierSelect.addEventListener('change', updateHeaderBadge);
-    
-    // Initialize state on load
-    updateHeaderBadge();
-});
-
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. Sync header badge on initial page load
-    syncHeaderYear();
+    const subjectSelect = document.getElementById("subjectSelect");
+    const yearSelect = document.getElementById("yearSelect");
+    const gcseFields = document.getElementById("gcseFields");
+    const routeSelect = document.getElementById("routeSelect");
+    const tierSelect = document.getElementById("tierSelect");
+    const topicSelect = document.getElementById("topicSelect");
+    const subtopicSelect = document.getElementById("subtopicSelect");
+    const startBtn = document.getElementById("startBtn");
+    const changeYearBtn = document.getElementById("change-year-btn");
+    const yearBadge = document.getElementById("year-badge");
+    const yearText = document.getElementById("current-year-text");
 
-    // 2. Fetch Curriculum JSON
+    // 1. Load curriculum.json
     try {
         const res = await fetch("data/curriculum.json");
         CURRICULUM = await res.json();
@@ -83,28 +62,111 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Could not load curriculum.json", e);
     }
 
-    // 3. Element References (Using matching camelCase IDs)
-    const yearSelect = document.getElementById("yearSelect");
-    const gcseFields = document.getElementById("gcseFields");
-    const subjectSelect = document.getElementById("subjectSelect");
-    const topicSelect = document.getElementById("topicSelect");
-    const subtopicSelect = document.getElementById("subtopicSelect");
-    const startBtn = document.getElementById("startBtn");
-    const changeYearBtn = document.getElementById("change-year-btn");
+    // Helper: update header badge & toggle Route/Tier fields
+    function updateProfileUI() {
+        const subjectVal = subjectSelect ? subjectSelect.value : "";
+        const yearVal = yearSelect ? yearSelect.value : "";
+        const showExamFields = shouldShowRouteAndTier(subjectVal, yearVal);
 
-    // 4. Restore saved year if present in localStorage
-    const savedYear = localStorage.getItem("selectedYear");
-    if (yearSelect && savedYear) {
-        yearSelect.value = savedYear;
-        const yr = parseInt(savedYear, 10);
-        if (gcseFields) {
-            if (yr >= 10) gcseFields.classList.remove("hidden");
-            else gcseFields.classList.add("hidden");
+        // Year dropdown is only enabled once a Subject is selected
+        if (yearSelect) {
+            yearSelect.disabled = !subjectVal;
         }
-        if (subjectSelect) subjectSelect.disabled = isNaN(yr);
+
+        // Toggle Route & Tier container
+        if (gcseFields) {
+            if (showExamFields) {
+                gcseFields.classList.remove("hidden");
+            } else {
+                gcseFields.classList.add("hidden");
+            }
+        }
+
+        // Update header badge
+        if (yearBadge && yearText) {
+            if (yearVal) {
+                const subjectObj = getSubjectConfig(subjectVal);
+                const subjectLabel = subjectObj ? subjectObj.name : "";
+                let label = subjectLabel
+                    ? `${subjectLabel} · Year ${yearVal}`
+                    : `Year ${yearVal}`;
+
+                if (showExamFields) {
+                    const routeText = routeSelect?.options[routeSelect.selectedIndex]?.text || "";
+                    const tierText = tierSelect?.options[tierSelect.selectedIndex]?.text || "";
+                    if (routeText && tierText) {
+                        label += ` (${routeText}, ${tierText})`;
+                    }
+                }
+
+                yearText.textContent = label;
+                yearBadge.classList.remove("hidden");
+            } else {
+                yearText.textContent = "Select Profile";
+                yearBadge.classList.remove("hidden");
+            }
+        }
+
+        if (typeof checkStart === "function") {
+            checkStart();
+        }
     }
 
-    // 5. Year Change Listener
+    // Helper: populate topics for selected Subject + Year
+    function populateTopics() {
+        if (!yearSelect || !subjectSelect || !topicSelect || !subtopicSelect) return;
+
+        const year = parseInt(yearSelect.value, 10);
+        const subjectId = parseInt(subjectSelect.value, 10);
+
+        topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+        topicSelect.disabled = true;
+
+        subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
+        subtopicSelect.disabled = true;
+
+        if (!CURRICULUM || !Array.isArray(CURRICULUM.topics) || isNaN(subjectId) || isNaN(year)) {
+            if (typeof checkStart === "function") checkStart();
+            return;
+        }
+
+        const filtered = CURRICULUM.topics.filter(
+            t => Number(t.subjectId) === subjectId && Number(t.year) === year
+        );
+
+        filtered.forEach(t => {
+            topicSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+        });
+
+        topicSelect.disabled = filtered.length === 0;
+        if (typeof checkStart === "function") checkStart();
+    }
+
+    // 2. Subject Change Listener (Step 1)
+    if (subjectSelect) {
+        subjectSelect.addEventListener("change", () => {
+            // Reset downstream selections when subject changes
+            if (yearSelect) {
+                yearSelect.value = "";
+                yearSelect.disabled = !subjectSelect.value;
+            }
+            if (topicSelect) {
+                topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+                topicSelect.disabled = true;
+            }
+            if (subtopicSelect) {
+                subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
+                subtopicSelect.disabled = true;
+            }
+
+            localStorage.removeItem("selectedYear");
+            localStorage.removeItem("selectedYearName");
+
+            updateProfileUI();
+        });
+    }
+
+    // 3. Year Change Listener (Step 2)
     if (yearSelect) {
         yearSelect.addEventListener("change", (e) => {
             const yr = parseInt(e.target.value, 10);
@@ -118,65 +180,104 @@ document.addEventListener("DOMContentLoaded", async () => {
                 localStorage.removeItem("selectedYearName");
             }
 
-            // Immediately update top badge
-            syncHeaderYear();
-
-            // Toggle GCSE fields
-            if (gcseFields) {
-                if (yr >= 10) {
-                    gcseFields.classList.remove("hidden");
-                } else {
-                    gcseFields.classList.add("hidden");
-                }
-            }
-
-            if (subjectSelect) subjectSelect.disabled = isNaN(yr);
+            updateProfileUI();
             populateTopics();
         });
     }
 
-    // 6. Header 'Change Year' Button Listener
+    // 4. Route & Tier Listeners
+    if (routeSelect) routeSelect.addEventListener("change", updateProfileUI);
+    if (tierSelect) tierSelect.addEventListener("change", updateProfileUI);
+
+    // 5. Topic & Subtopic Listeners
+    if (topicSelect) topicSelect.addEventListener("change", populateSubtopics);
+
+    // 6. Optional Header 'Change Year' Button Listener
     if (changeYearBtn) {
         changeYearBtn.addEventListener("click", () => {
             localStorage.removeItem("selectedYear");
             localStorage.removeItem("selectedYearName");
             if (yearSelect) yearSelect.value = "";
-            if (gcseFields) gcseFields.classList.add("hidden");
-            if (subjectSelect) subjectSelect.disabled = true;
-
-            syncHeaderYear();
-            populateTopics();
+            if (topicSelect) {
+                topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+                topicSelect.disabled = true;
+            }
+            if (subtopicSelect) {
+                subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
+                subtopicSelect.disabled = true;
+            }
+            updateProfileUI();
         });
     }
 
-    if (subjectSelect) subjectSelect.addEventListener("change", populateTopics);
-    if (topicSelect) topicSelect.addEventListener("change", populateSubtopics);
+// 7. Start Quiz Button
+if (startBtn) {
+    startBtn.addEventListener("click", () => {
+        const subject = subjectSelect ? subjectSelect.value : "";
+        const year = yearSelect ? yearSelect.value : "";
+        const topic = topicSelect ? topicSelect.value : "";
+        const subtopic = subtopicSelect ? subtopicSelect.value : "all";
 
-    // 7. Filter topics by subject and year selected
-    function populateTopics() {
-        if (!yearSelect || !subjectSelect || !topicSelect || !subtopicSelect) return;
+        const yearNum = Number(year);
+        const showExamFields = shouldShowRouteAndTier(subject, yearNum);
 
-        const year = parseInt(yearSelect.value, 10);
-        const subjectId = parseInt(subjectSelect.value, 10);
+        let route = "0";
+        if (yearNum >= 10) {
+            // Year 10 & 11 default to route 1; only use route 2 when Separate is shown and selected
+            route = showExamFields && routeSelect ? routeSelect.value : "1";
+        }
 
-        topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-        subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
+        const tier = showExamFields && tierSelect ? tierSelect.value : "0";
+
+        window.location.href = `quiz.html?subject=${subject}&year=${year}&topic=${topic}&subtopic=${subtopic}&route=${route}&tier=${tier}`;
+    });
+}
+
+    // Initial state on load
+    updateProfileUI();
+});
+
+function populateSubtopics() {
+    const topicSelect = document.getElementById("topicSelect");
+    const subtopicSelect = document.getElementById("subtopicSelect");
+    if (!topicSelect || !subtopicSelect) return;
+
+    const topicId = parseInt(topicSelect.value, 10);
+
+    subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
+
+    if (!CURRICULUM || !Array.isArray(CURRICULUM.subtopics) || isNaN(topicId)) {
         subtopicSelect.disabled = true;
-
-        if (!CURRICULUM || !CURRICULUM.topics) return;
-
-        const filtered = CURRICULUM.topics.filter(
-            t => Number(t.subjectId) === subjectId && Number(t.year) === year
-        );
-
-        filtered.forEach(t => {
-            topicSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
-        });
-
-        topicSelect.disabled = filtered.length === 0;
         if (typeof checkStart === "function") checkStart();
+        return;
     }
-})
+
+    const filtered = CURRICULUM.subtopics.filter(
+        st => Number(st.topicId) === topicId
+    );
+
+    filtered.forEach(st => {
+        subtopicSelect.innerHTML += `<option value="${st.id}">${st.name}</option>`;
+    });
+
+    subtopicSelect.disabled = false;
+    if (typeof checkStart === "function") checkStart();
+}
+
+function checkStart() {
+    const subjectSelect = document.getElementById("subjectSelect");
+    const topicSelect = document.getElementById("topicSelect");
+    const startBtn = document.getElementById("startBtn");
+    if (!startBtn || !subjectSelect || !topicSelect) return;
+
+    startBtn.disabled = !subjectSelect.value || !topicSelect.value;
+}
+
+function resetTopics() {
+    if (typeof populateTopics === "function") {
+        populateTopics();
+    }
+}
 
 // Global tracking for the current quiz session
 let currentQuizLog = [];
@@ -265,204 +366,3 @@ function toggleReviewList(elementId) {
         }
     });
 }
-
-// Function to update profile selection and hide target profile box
-function handleYearSelection(selectedYear) {
-    const profileBox = document.getElementById('target-profile-box');
-    const yearBadge = document.getElementById('year-badge');
-    const yearText = document.getElementById('current-year-text');
-    const subjectSelect = document.getElementById('subjectSelect');
-
-    if (selectedYear) {
-        // Hide profile box and enable subject selection
-        if (profileBox) profileBox.classList.add('hidden');
-        if (yearBadge) yearBadge.classList.remove('hidden');
-        if (yearText) yearText.textContent = `Year ${selectedYear}`;
-        if (subjectSelect) subjectSelect.disabled = false;
-    } else {
-        if (profileBox) profileBox.classList.remove('hidden');
-        if (yearBadge) yearBadge.classList.add('hidden');
-        if (subjectSelect) subjectSelect.disabled = true;
-    }
-}
-
-// Add event listener to year select dropdown
-document.addEventListener("DOMContentLoaded", () => {
-    const yearSelect = document.getElementById("yearSelect");
-    if (yearSelect) {
-        yearSelect.addEventListener("change", (e) => {
-            handleYearSelection(e.target.value);
-        });
-    }
-});
-
-function populateSubtopics() {
-    const topicId = parseInt(topicSelect.value, 10);
-
-    subtopicSelect.innerHTML = '<option value="all">All Subtopics</option>';
-
-    if (!CURRICULUM || !CURRICULUM.subtopics || isNaN(topicId)) {
-        subtopicSelect.disabled = true;
-        checkStart();
-        return;
-    }
-
-    // Compare numbers to numbers
-    const filtered = CURRICULUM.subtopics.filter(
-        st => Number(st.topicId) === topicId
-    );
-
-    filtered.forEach(st => {
-        subtopicSelect.innerHTML += `<option value="${st.id}">${st.name}</option>`;
-    });
-
-    subtopicSelect.disabled = false;
-    checkStart();
-}
-
-    function checkStart() {
-        startBtn.disabled = !subjectSelect.value || !topicSelect.value;
-    }
-
-    startBtn.addEventListener("click", () => {
-        const year = yearSelect.value;
-        const subject = subjectSelect.value;
-        const topic = topicSelect.value;
-        const subtopic = subtopicSelect.value;
-        const route = document.getElementById("routeSelect").value;
-        const tier = document.getElementById("tierSelect").value;
-
-        window.location.href = `quiz.html?subject=${subject}&year=${year}&topic=${topic}&subtopic=${subtopic}&route=${route}&tier=${tier}`;
-    });
-
-function resetTopics() {
-    if (typeof populateTopics === "function") {
-        populateTopics();
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Use camelCase to match index.html
-  const yearSelect = document.getElementById("yearSelect"); 
-  const yearBadge = document.getElementById("year-badge");
-  const yearText = document.getElementById("current-year-text");
-  const changeYearBtn = document.getElementById("change-year-btn");
-
-  // 1. Check if a year is already saved in localStorage
-  const savedYear = localStorage.getItem("selectedYear");
-  const savedYearName = localStorage.getItem("selectedYearName");
-
-  // Safe check before setting .value
-  if (savedYear && yearSelect) {
-    yearSelect.value = savedYear;
-    if (typeof updateYearBanner === "function") {
-      updateYearBanner(savedYearName);
-    }
-  }
-
-  // 2. Event listener when user selects/changes the year
-  yearSelect.addEventListener("change", (e) => {
-    const selectedValue = e.target.value;
-    const selectedText = e.target.options[e.target.selectedIndex].text;
-
-    if (selectedValue) {
-      localStorage.setItem("selectedYear", selectedValue);
-      localStorage.setItem("selectedYearName", selectedText);
-      updateYearBanner(selectedText);
-    } else {
-      localStorage.removeItem("selectedYear");
-      localStorage.removeItem("selectedYearName");
-      hideYearBanner();
-    }
-    
-    // Call your existing function to populate topics for the chosen year
-    if (typeof populateTopics === "function") {
-      populateTopics();
-    }
-  });
-
-  // 3. Reset button inside the header banner
-  if (changeYearBtn) {
-    changeYearBtn.addEventListener("click", () => {
-      localStorage.removeItem("selectedYear");
-      localStorage.removeItem("selectedYearName");
-      yearSelect.value = "";
-      hideYearBanner();
-      
-      if (typeof populateTopics === "function") {
-        populateTopics();
-      }
-    });
-  }
-
-  function updateYearBanner(name) {
-    if (yearBadge && yearText) {
-      yearText.textContent = name;
-      yearBadge.classList.remove("hidden");
-    }
-  }
-
-  function hideYearBanner() {
-    if (yearBadge) {
-      yearBadge.classList.add("hidden");
-    }
-  }
-});
-
-function updateProfileDisplay() {
-    const yearSelect = document.getElementById('yearSelect');
-    const routeSelect = document.getElementById('routeSelect');
-    const tierSelect = document.getElementById('tierSelect');
-    
-    const profileBox = document.getElementById('target-profile-box');
-    const yearBadge = document.getElementById('year-badge');
-    const yearText = document.getElementById('current-year-text');
-    const subjectSelect = document.getElementById('subjectSelect');
-
-    const yearVal = yearSelect ? yearSelect.value : '';
-
-    if (yearVal) {
-        let badgeLabel = `Year ${yearVal}`;
-        
-        // Include Route & Tier details for Year 10 and 11
-        if (parseInt(yearVal) >= 10) {
-            const routeName = routeSelect && routeSelect.value === '2' ? 'Triple' : 'Combined';
-            const tierName = tierSelect && tierSelect.value === '2' ? 'Higher' : 'Foundation';
-            badgeLabel = `Year ${yearVal} - ${routeName} (${tierName})`;
-        }
-
-        if (yearText) yearText.textContent = badgeLabel;
-        if (profileBox) profileBox.classList.add('hidden');
-        if (yearBadge) yearBadge.classList.remove('hidden');
-        if (subjectSelect) subjectSelect.disabled = false;
-    } else {
-        if (profileBox) profileBox.classList.remove('hidden');
-        if (yearBadge) yearBadge.classList.add('hidden');
-        if (subjectSelect) subjectSelect.disabled = true;
-    }
-}
-
-// Event handlers
-document.addEventListener('DOMContentLoaded', () => {
-    const yearSelect = document.getElementById('yearSelect');
-    const routeSelect = document.getElementById('routeSelect');
-    const tierSelect = document.getElementById('tierSelect');
-    const gcseFields = document.getElementById('gcseFields');
-
-    if (yearSelect) {
-        yearSelect.addEventListener('change', () => {
-            const yearVal = parseInt(yearSelect.value);
-            if (gcseFields) {
-                if (yearVal >= 10) {
-                    gcseFields.classList.remove('hidden');
-                } else {
-                    gcseFields.classList.add('hidden');
-                }
-            }
-            updateProfileDisplay();
-        });
-    }
-
-    if (routeSelect) routeSelect.addEventListener('change', updateProfileDisplay);
-    if (tierSelect) tierSelect.addEventListener('change', updateProfileDisplay);
-});

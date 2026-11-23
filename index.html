@@ -13,8 +13,8 @@
     <header class="app-header">
         <div class="header-content">
             <h1 onclick="window.location.href='index.html'" style="cursor: pointer;">
-      Retrieval Practice
-    </h1>
+                Retrieval Practice
+            </h1>
             
             <div class="header-actions">
                 <!-- Weak Spots Pill & Dropdown -->
@@ -39,14 +39,28 @@
     </header>
 
     <div class="container">
-        <h2>Science Retrieval Practice</h2>
+        <h2>Retrieval Practice</h2>
         
-        <!-- Target Profile Card (Always Visible) -->
+        <!-- 1. Subject & Year Group -->
         <div id="target-profile-box" class="card-box">
-            <h3>1. Target Profile</h3>
+            <h3>1. Subject &amp; Year Group</h3>
+
+            <div class="form-group">
+                <label for="subjectSelect">Subject:</label>
+                <select id="subjectSelect">
+                    <option value="">-- Select Subject --</option>
+                    <option value="1">Biology</option>
+                    <option value="2">Chemistry</option>
+                    <option value="3">Physics</option>
+                    <option value="4">Working Scientifically</option>
+                    <option value="5">Geography</option>
+                    <option value="6">PE</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="yearSelect">Year Group:</label>
-                <select id="yearSelect">
+                <select id="yearSelect" disabled>
                     <option value="">-- Select Year --</option>
                     <option value="7">Year 7</option>
                     <option value="8">Year 8</option>
@@ -56,13 +70,13 @@
                 </select>
             </div>
 
-            <!-- GCSE Route & Tier Fields (Visible for Y10 & Y11) -->
+            <!-- Science GCSE Route & Tier Fields (Shown only when applicable Subject + Year are chosen) -->
             <div id="gcseFields" class="hidden">
                 <div class="form-group">
                     <label for="routeSelect">Exam Route:</label>
                     <select id="routeSelect">
-                        <option value="1">Combined Science</option>
-                        <option value="2">Triple Science</option>
+                        <option value="1">Combined</option>
+                        <option value="2">Separate</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -75,18 +89,9 @@
             </div>
         </div>
 
-        <!-- Topic Selection Card -->
+        <!-- 2. Topic & Subtopic Selection -->
         <div class="card-box">
             <h3>2. Select Topic</h3>
-            <div class="form-group">
-                <label for="subjectSelect">Subject:</label>
-                <select id="subjectSelect" disabled>
-                    <option value="">-- Select Subject --</option>
-                    <option value="1">Biology</option>
-                    <option value="2">Chemistry</option>
-                    <option value="3">Physics</option>
-                </select>
-            </div>
             <div class="form-group">
                 <label for="topicSelect">Topic:</label>
                 <select id="topicSelect" disabled>
